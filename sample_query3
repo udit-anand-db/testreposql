@@ -1,0 +1,5 @@
+UPDATE product
+    SET price = price * 1.1
+    WHERE 
+        category = 'electronics'
+        AND last_updated < '2023-01-01';
