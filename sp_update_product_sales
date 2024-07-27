@@ -1,0 +1,23 @@
+CREATE PROCEDURE sp_update_product_sales (
+    IN start_date DATE,
+    IN end_date DATE
+)
+BEGIN
+    -- Update sales amounts for products
+    UPDATE product p
+    JOIN sales s ON p.product_id = s.product_id
+    SET p.total_sales = p.total_sales + s.sales_amount
+    WHERE s.sales_date BETWEEN start_date AND end_date;
+
+    -- Adjust inventory levels
+    UPDATE inventory i
+    JOIN sales s ON i.product_id = s.product_id
+    SET i.stock_level = i.stock_level - s.quantity_sold
+    WHERE s.sales_date BETWEEN start_date AND end_date;
+
+    -- Log changes in the audit table
+    INSERT INTO product_sales_audit (product_id, sales_date, sales_amount, quantity_sold)
+    SELECT s.product_id, s.sales_date, s.sales_amount, s.quantity_sold
+    FROM sales s
+    WHERE s.sales_date BETWEEN start_date AND end_date;
+END;
