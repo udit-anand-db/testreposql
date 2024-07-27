@@ -1,0 +1,11 @@
+SELECT 
+        sales_date, 
+        product_id, 
+        store_id, 
+        sales_amount 
+    FROM 
+        sales 
+    WHERE 
+        sales_date >= '2023-04-01' 
+        AND sales_date <= '2023-06-30';
+    
